@@ -1,0 +1,31 @@
+# Development
+FROM node:18-alpine as development
+
+WORKDIR /usr/src/app
+
+COPY ./package*.json /usr/src/app/
+
+RUN npm install --only=development
+
+COPY . .
+
+RUN npm run build
+
+# Production
+FROM node:18-alpine
+
+WORKDIR /usr/src/app
+
+COPY ./package*.json /usr/src/app/
+
+RUN npm install --only=production
+
+COPY . .
+
+RUN npm run build
+
+COPY --from=development /usr/src/app/dist /usr/src/app/dist
+
+EXPOSE 3000
+
+CMD [ "node", "dist/main.js" ]

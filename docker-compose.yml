@@ -1,0 +1,26 @@
+version: '3.9'
+services:
+  server:
+    container_name: server
+    build:
+      context: ./api
+      dockerfile: dockerfile
+      target: development
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./api:/usr/src/app/
+      - /usr/src/app/node_modules
+    command: npm run start:dev
+  client:
+    container_name: client
+    build:
+      context: ./webapp
+      dockerfile: dockerfile
+      target: development
+    ports:
+      - "4200:4200"
+    volumes:
+      - ./webapp:/usr/src/app/
+      - /usr/src/app/node_modules
+    command: ng serve --host 0.0.0.0
